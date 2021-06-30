@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-agent-conf
+  namespace: vector
+data:
+  vector.toml: |2+
+
+    data_dir                                = "/var/lib/vector"
+
+
+    [api]
+      enabled                               = true
+      address                               = "127.0.0.1:8686"
+      playground                            = true
+
+
+
+    [sources.dummy_logs1]
+      type = "generator"
+      format = "apache_common"
+      sequence = "true"
+
+      #[transforms.my_transform]
+      #type = "filter"
+      #inputs = ["log_files"]
+      #condition = '.kubernetes.pod_namespace == "test"'
+
+    [sinks.kafka]
+      type = "kafka"
+      inputs = ["dummy_logs1"]
+      bootstrap_servers = "my-cluster-kafka-bootstrap.amq:9092"
+      topic = "vector-topic"
+      encoding.codec = "json"

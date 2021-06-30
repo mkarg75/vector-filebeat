@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-agent-conf
+  namespace: vector
+data:
+  vector.toml: |2+
+
+    data_dir                                = "/var/lib/vector"
+
+
+    [api]
+      enabled                               = true
+      address                               = "127.0.0.1:8686"
+      playground                            = true
+
+
+
+    [sources.log_files]
+      type                                  = "file"
+      ignore_older_secs                     = 6000
+      include                               = ["/var/log/pods/test_log-*/log-generator/*.log"]    
+      read_from                             = "beginning"
+
+    [transforms.my_transform]
+      type = "filter"
+      inputs = ["log_files"]
+      condition = '1 == 1'
+
+    [sinks.kafka]
+      type = "blackhole"
+      inputs = ["my_transform"]

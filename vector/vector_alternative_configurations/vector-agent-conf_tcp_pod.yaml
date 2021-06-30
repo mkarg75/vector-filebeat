@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-agent-conf
+  namespace: vector
+data:
+  vector.toml: |2+
+
+    data_dir                                = "/var/lib/vector"
+
+
+    [api]
+      enabled                               = true
+      address                               = "127.0.0.1:8686"
+      playground                            = true
+
+
+
+    [sources.log_files]
+      type                                  = "file"
+      include                               = ["/var/log/pods/test_log-*/log-generator/*.log"]    
+      read_from                             = "beginning"
+
+    [transforms.my_transform]
+      type = "remap"
+      inputs = ["log_files"]
+      source = '''
+        received, err = format_timestamp(now(),"%+")
+        .read_at = received
+      '''
+
+    [sinks.socket]
+      type = "socket" 
+      inputs = ["my_transform"]
+      #address = "rhel-tcp-sink.apps.logging710.myocp4.com:80"
+      address = "rhel.tcp-sink:5000"
+      mode = "tcp" 
+      encoding.codec = "json"
