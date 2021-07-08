@@ -37,8 +37,8 @@ spec:
               fieldPath: metadata.namespace
         - name: LOG
           value: info
-        #image: quay.io/dciancio/vector
-        image: quay.io/mkarg/vector
+        image: quay.io/dciancio/vector
+        #image: quay.io/mkarg/vector
         imagePullPolicy: IfNotPresent
         name: vector
         ports:

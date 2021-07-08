@@ -1,0 +1,17 @@
+apiVersion: ripsaw.cloudbulldozer.io/v1alpha1
+kind: Benchmark
+metadata:
+  name: log-generator
+  namespace: test
+spec:
+  workload:
+    name: log_generator
+    args:
+      pod_count: PODS
+      size: SIZE
+      messages_per_second: RATE
+      duration: DURATION
+      timeout: 600
+      label:
+        key: foo
+        value: ""
